@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: Albion Bot
+
+discord:
+  token: NTkwMjk4MzQ1ODI2ODExOTE4.XQgMUg.CUwmcBkSi7sBBHqp6iqEO1EBZIY
+  commands:
+    join: $join
+    show: $show
+    save: $save
+    leave: $leave
+
+google:
+  spreadsheet:
+    name: AlbionAttendance
+
+debug: true

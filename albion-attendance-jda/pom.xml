@@ -11,20 +11,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>albion-attendance-jda</artifactId>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <dependencies>
+        <!-- Internal -->
+        <dependency>
+            <groupId>sk.albion</groupId>
+            <artifactId>albion-attendance-google</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Discord -->
         <dependency>
             <groupId>net.dv8tion</groupId>
@@ -55,39 +50,6 @@
             <groupId>com.neovisionaries</groupId>
             <artifactId>nv-websocket-client</artifactId>
             <version>2.5</version>
-        </dependency>
-
-        <!-- Google -->
-        <dependency>
-            <groupId>com.google.api-client</groupId>
-            <artifactId>google-api-client</artifactId>
-            <version>1.23.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.oauth-client</groupId>
-            <artifactId>google-oauth-client-jetty</artifactId>
-            <version>1.23.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.apis</groupId>
-            <artifactId>google-api-services-sheets</artifactId>
-            <version>v4-rev493-1.23.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>28.0-jre</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.8</version>
         </dependency>
     </dependencies>
 </project>

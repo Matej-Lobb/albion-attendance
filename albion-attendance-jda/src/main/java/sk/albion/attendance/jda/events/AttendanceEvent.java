@@ -13,7 +13,8 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.core.managers.AudioManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sk.albion.attendance.jda.google.GoogleService;
+import sk.albion.attendance.google.GoogleService;
+import sk.albion.attendance.jda.commands.DiscordCommandsLoader;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.List;
 public class AttendanceEvent extends ListenerAdapter {
 
     private final GoogleService googleService;
+    private final DiscordCommandsLoader discordCommandsLoader;
 
     private VoiceChannel controlledChannel;
     private List<Member> connectedMembers = new ArrayList<>();
@@ -33,7 +35,8 @@ public class AttendanceEvent extends ListenerAdapter {
     private static final Permission USAGE_RIGHT = Permission.ADMINISTRATOR;
 
     @Autowired
-    public AttendanceEvent(GoogleService googleService) {
+    public AttendanceEvent(GoogleService googleService, DiscordCommandsLoader discordCommandsLoader) {
+        this.discordCommandsLoader = discordCommandsLoader;
         this.googleService = googleService;
     }
 
@@ -41,18 +44,17 @@ public class AttendanceEvent extends ListenerAdapter {
         if (event.getAuthor().isBot()) {
             return;
         }
-
         if (!event.getMember().hasPermission(USAGE_RIGHT)) {
             return;
         }
 
-        if (event.getMessage().getContentRaw().equals("$join")) {
+        if (event.getMessage().getContentRaw().equals(discordCommandsLoader.getJoinCommand())) {
             join(event);
-        } else if (event.getMessage().getContentRaw().equals("$leave")) {
+        } else if (event.getMessage().getContentRaw().equals(discordCommandsLoader.getLeaveCommand())) {
             leave(event);
-        } else if (event.getMessage().getContentRaw().equals("$show")) {
+        } else if (event.getMessage().getContentRaw().equals(discordCommandsLoader.getShowCommand())) {
             showUsers(event);
-        } else if (event.getMessage().getContentRaw().equals("$save")) {
+        } else if (event.getMessage().getContentRaw().equals(discordCommandsLoader.getSaveCommand())) {
             save(event);
         }
     }
@@ -88,6 +90,9 @@ public class AttendanceEvent extends ListenerAdapter {
             googleService.writeFirstDataToSpreadSheet(spreadSheetId, month, "ZVZ", connectedMembers);
             log.info("Data successfully updated in SpreadSheet: {}",
                     String.format("https://docs.google.com/spreadsheets/d/%s/", spreadSheetId));
+
+            channel.sendMessage(String.format("Data successfully updated in SpreadSheet: %s",
+                    String.format("https://docs.google.com/spreadsheets/d/%s/", spreadSheetId))).queue();
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to save data to Google Spreadsheet!");
         }
