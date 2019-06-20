@@ -35,7 +35,7 @@ public class LeaveCommand implements Command {
         GuildMessageReceivedEvent event = (GuildMessageReceivedEvent) rawEvent;
         TextChannel channel = event.getChannel();
 
-        String caller = channel.getGuild().getSelfMember().getUser().getName();
+        String caller = event.getMessage().getAuthor().getName();
         log.info("Received leave request from {}", caller);
 
         VoiceChannel controlledChannel = discordDataHolder.getControlledChannel();

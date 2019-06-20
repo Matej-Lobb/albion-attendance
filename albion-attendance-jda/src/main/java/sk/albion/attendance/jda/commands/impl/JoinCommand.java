@@ -37,7 +37,7 @@ public class JoinCommand implements Command {
         GuildMessageReceivedEvent event = (GuildMessageReceivedEvent) rawEvent;
         TextChannel channel = event.getChannel();
 
-        String caller = channel.getGuild().getSelfMember().getUser().getName();
+        String caller = event.getMessage().getAuthor().getName();
         log.info("Received join request from {}", caller);
 
         if (!event.getGuild().getSelfMember().hasPermission(channel, Permission.VOICE_CONNECT)) {

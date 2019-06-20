@@ -16,7 +16,8 @@
 		<module>albion-attendance-jda</module>
         <module>albion-attendance-boot</module>
 		<module>albion-attendance-google</module>
-	</modules>
+        <module>albion-db</module>
+    </modules>
 
 	<artifactId>albion-attendance</artifactId>
 	<groupId>sk.albion</groupId>
@@ -39,6 +40,9 @@
 		<google-api-services-sheets-version>v4-rev493-1.23.0</google-api-services-sheets-version>
 		<google-api-client-version>1.23.0</google-api-client-version>
 		<guava-version>28.0-jre</guava-version>
+
+		<!-- DB -->
+		<h2-version>1.4.199</h2-version>
 
 		<!-- Model -->
 		<lombok-version>1.18.8</lombok-version>

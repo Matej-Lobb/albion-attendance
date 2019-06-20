@@ -9,12 +9,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import sk.albion.attendance.jda.commands.Command;
 import sk.albion.attendance.jda.commands.impl.JoinCommand;
 import sk.albion.attendance.jda.commands.impl.LeaveCommand;
 import sk.albion.attendance.jda.commands.impl.SaveCommand;
 import sk.albion.attendance.jda.commands.impl.ShowCommand;
 import sk.albion.attendance.jda.event.UserJoinServerEvent;
 import sk.albion.attendance.jda.events.AttendanceEvent;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -24,19 +29,12 @@ public class AlbionJdaStarter {
     private String token;
 
     private final UserJoinServerEvent joinServerEvent;
-    private final LeaveCommand leaveCommand;
-    private final SaveCommand saveCommand;
-    private final JoinCommand joinCommand;
-    private final ShowCommand showCommand;
+    private final List<Command> commands;
 
     @Autowired
-    public AlbionJdaStarter(JoinCommand joinCommand, SaveCommand saveCommand, LeaveCommand leaveCommand,
-                           ShowCommand showCommand, UserJoinServerEvent joinServerEvent) {
+    public AlbionJdaStarter(List<Command> commands, UserJoinServerEvent joinServerEvent) {
         this.joinServerEvent = joinServerEvent;
-        this.leaveCommand = leaveCommand;
-        this.showCommand = showCommand;
-        this.joinCommand = joinCommand;
-        this.saveCommand = saveCommand;
+        this.commands = commands;
     }
 
     @EventListener
@@ -44,6 +42,10 @@ public class AlbionJdaStarter {
         log.info("Starting Albion-Attendance BOT ...");
         log.debug("Discord Token: {}", token);
         JDA jda = new JDABuilder(token).build();
-        jda.addEventListener(new AttendanceEvent(joinCommand, saveCommand, leaveCommand, showCommand, joinServerEvent));
+        jda.addEventListener(new AttendanceEvent(convertListToMap(commands), joinServerEvent));
+    }
+
+    private Map<String, Command> convertListToMap(List<Command> commands) {
+        return commands.stream().collect(Collectors.toMap(Command::getCommandDefinition, command -> command));
     }
 }

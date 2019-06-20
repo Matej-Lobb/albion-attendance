@@ -12,6 +12,13 @@
     <artifactId>albion-attendance-google</artifactId>
 
     <dependencies>
+        <!-- Internal -->
+        <dependency>
+            <groupId>sk.albion</groupId>
+            <artifactId>albion-db</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Google -->
         <dependency>
             <groupId>com.google.api-client</groupId>
@@ -45,13 +52,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <!-- model -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok-version}</version>
         </dependency>
     </dependencies>
 
