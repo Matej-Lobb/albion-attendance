@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -65,39 +66,12 @@ public class SaveCommand implements Command {
                 return;
             }
 
-            //TODO Refactor
-            String message = event.getMessage().getContentRaw();
-            String croppedMessage = message.replace(getCommandDefinition(), "");
-            if (Strings.isNullOrEmpty(croppedMessage)) {
-                showUsage();
+            StringBuilder actionName = getActionName(event);
+            if (actionName == null) {
+                showUsage(channel);
                 return;
             }
-            String[] parts = croppedMessage.split(" ");
-            List<String> words = new ArrayList<>();
-            for (String part : parts) {
-                if (!Strings.isNullOrEmpty(part)) {
-                    words.add(part);
-                }
-            }
-
-            StringBuilder actionName = new StringBuilder();
-            if (words.isEmpty()) {
-                showUsage();
-                return;
-            } else if (words.size() > 1) {
-                for (String word : words) {
-                    if (Strings.isNullOrEmpty(actionName.toString())) {
-                        actionName.append(word);
-                    } else {
-                        actionName.append(" ").append(word);
-                    }
-                }
-            } else {
-                actionName = new StringBuilder(words.iterator().next());
-            }
-
             log.info("Action Name: {}", actionName);
-            // TODO End
 
             String spreadSheetId = getOrCreateSpreadsheet(event);
 
@@ -106,7 +80,7 @@ public class SaveCommand implements Command {
 
             // TODO check sheet if fit month
 
-            googleService.writeFirstDataToSpreadSheet(spreadSheetId, month, "ZVZ",
+            googleService.writeFirstDataToSpreadSheet(spreadSheetId, month, actionName.toString(),
                     discordDataHolder.getConnectedMembers());
             log.info("Data successfully updated in SpreadSheet: {}",
                     String.format("https://docs.google.com/spreadsheets/d/%s/", spreadSheetId));
@@ -119,8 +93,41 @@ public class SaveCommand implements Command {
         }
     }
 
-    private void showUsage() {
+    @Nullable
+    private StringBuilder getActionName(GuildMessageReceivedEvent event) {
+        String message = event.getMessage().getContentRaw();
+        String croppedMessage = message.replace(getCommandDefinition(), "");
+        if (Strings.isNullOrEmpty(croppedMessage)) {
+            return null;
+        }
+        String[] parts = croppedMessage.split(" ");
+        List<String> words = new ArrayList<>();
+        for (String part : parts) {
+            if (!Strings.isNullOrEmpty(part)) {
+                words.add(part);
+            }
+        }
 
+        StringBuilder actionName = new StringBuilder();
+        if (words.isEmpty()) {
+            return null;
+        } else if (words.size() > 1) {
+            for (String word : words) {
+                if (Strings.isNullOrEmpty(actionName.toString())) {
+                    actionName.append(word);
+                } else {
+                    actionName.append(" ").append(word);
+                }
+            }
+        } else {
+            actionName = new StringBuilder(words.iterator().next());
+        }
+        return actionName;
+    }
+
+    private void showUsage(TextChannel channel) {
+        channel.sendMessage(String.format("Invalid usage of %s command! Examples: %s actionName / %s zvz",
+                getCommandDefinition(), getCommandDefinition(), getCommandDefinition())).queue();
     }
 
     private String getOrCreateSpreadsheet(GuildMessageReceivedEvent event) throws IOException {

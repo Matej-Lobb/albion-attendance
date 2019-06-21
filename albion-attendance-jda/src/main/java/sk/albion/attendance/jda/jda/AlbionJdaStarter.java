@@ -3,17 +3,12 @@ package sk.albion.attendance.jda.jda;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import sk.albion.attendance.jda.commands.Command;
-import sk.albion.attendance.jda.commands.impl.JoinCommand;
-import sk.albion.attendance.jda.commands.impl.LeaveCommand;
-import sk.albion.attendance.jda.commands.impl.SaveCommand;
-import sk.albion.attendance.jda.commands.impl.ShowCommand;
 import sk.albion.attendance.jda.event.UserJoinServerEvent;
 import sk.albion.attendance.jda.events.AttendanceEvent;
 

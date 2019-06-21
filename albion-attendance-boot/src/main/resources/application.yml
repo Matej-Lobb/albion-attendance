@@ -6,7 +6,10 @@ spring:
     username: test
     password: test
     driverClassName: org.h2.Driver
-    ddl-auto: update
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
   h2:
     console:
       enabled: true
