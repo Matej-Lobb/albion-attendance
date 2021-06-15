@@ -16,7 +16,7 @@ spring:
       path: /h2
 
 discord:
-  token: NTkwMjk4MzQ1ODI2ODExOTE4.XQgMUg.CUwmcBkSi7sBBHqp6iqEO1EBZIY
+  token: TODO
   commands:
     join: $join
     show: $show
